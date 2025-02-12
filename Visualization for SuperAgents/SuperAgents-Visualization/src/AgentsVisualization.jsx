@@ -1,50 +1,15 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useContext } from "react";
 import ReactFlow, { MiniMap, Controls, Handle } from "reactflow";
+import { AppContext } from "./Context";
 import "reactflow/dist/style.css";
-
-const agentData = {
-  agents: [
-    {
-      agent_id: "agent_1",
-      parent_id: null,
-      related_agents: ["agent_2", "agent_3"],
-      role_name: "Market Research Agent",
-      system_prompt: "Conduct market research for new product launches.",
-      task_prompt: "Analyze market trends and customer preferences.",
-      metadata: {
-        creation_timestamp: "2023-10-01T12:00:00Z",
-        llm_used: "Ollama"
-      }
-    },
-    {
-      agent_id: "agent_2",
-      parent_id: "agent_1",
-      related_agents: ["agent_4"],
-      role_name: "Content Creation Agent",
-      system_prompt: "Create marketing content for campaigns.",
-      task_prompt: "Develop blog posts, social media content, and ads.",
-      metadata: {
-        creation_timestamp: "2023-10-01T12:05:00Z",
-        llm_used: "Ollama"
-      }
-    },
-    {
-      agent_id: "agent_3",
-      parent_id: "agent_1",
-      related_agents: [],
-      role_name: "Budget Planning Agent",
-      system_prompt: "Plan marketing budgets for campaigns.",
-      task_prompt: "Allocate budget for different marketing channels.",
-      metadata: {
-        "creation_timestamp": "2023-10-01T12:10:00Z",
-        "llm_used": "Ollama"
-      }
-    }
-  ]
-};
 
 // Function to generate nodes and edges from JSON
 const generateGraph = (data) => {
+  if (!data) {
+    const nodes = [];
+    const edges = [];
+    return { nodes, edges };
+  }
   const nodes = data.agents.map((agent, index) => ({
     id: agent.agent_id,
     position: { x: index * 250, y: agent.parent_id ? 200 : 50 },
@@ -73,14 +38,16 @@ const generateGraph = (data) => {
   return { nodes, edges };
 };
 
+// Component for the React FLow visualization panel and the agent detail panel
 const AgentsVisualization = () => {
-    const { nodes, edges } = generateGraph(agentData);
+    const {jsonData, setJsonData} = useContext(AppContext);
+    const { nodes, edges } = generateGraph(jsonData);
     const [selectedAgent, setSelectedAgent] = useState(null);
   
     const onNodeClick = useCallback((event, node) => {
-      const agent = agentData.agents.find(a => a.agent_id === node.id);
+      const agent = jsonData.agents.find(a => a.agent_id === node.id);
       setSelectedAgent(agent);
-    }, []);
+    }, [jsonData]);
   
     return (
       <div style={{ width: "100%", height: "500px", display: "flex" }}>

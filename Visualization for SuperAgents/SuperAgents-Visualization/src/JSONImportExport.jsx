@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { AppContext } from "./Context";
+import "./JSONImportExport.css"
 
+// Component for import and export JSON files
 const JSONImportExport = () => {
-  const [jsonData, setJsonData] = useState(null);
+  const {jsonData, setJsonData} = useContext(AppContext);
   const [error, setError] = useState(null);
 
   // Handle file drop
