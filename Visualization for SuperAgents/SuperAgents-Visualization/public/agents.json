@@ -33,7 +33,7 @@
       "agent_id": "agent_3",
       "parent_id": "agent_1",
       "related_agents": [],
-      "role_name": "Budget Planning Agent",
+      "role_name": "Budget Calculation Agent",
       "system_prompt": "Plan marketing budgets for campaigns.",
       "task_prompt": "Allocate budget for different marketing channels.",
       "metadata": {
