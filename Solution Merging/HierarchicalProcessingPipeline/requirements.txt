@@ -1,0 +1,9 @@
+openai
+sentence-transformers
+numpy
+scikit-learn
+tiktoken
+groq
+python-dotenv
+huggingface_hub
+requests
