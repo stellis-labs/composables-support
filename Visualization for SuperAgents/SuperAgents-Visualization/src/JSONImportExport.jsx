@@ -1,11 +1,12 @@
 import React, { useState, useContext } from "react";
 import { AppContext } from "./Context";
-import "./JSONImportExport.css"
+import { FiUpload, FiDownload, FiChevronDown, FiChevronUp } from "react-icons/fi";
+import "./JSONImportExport.css";
 
-// Component for import and export JSON files
 const JSONImportExport = () => {
-  const {jsonData, setJsonData} = useContext(AppContext);
+  const { jsonData, setJsonData } = useContext(AppContext);
   const [error, setError] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(true);
 
   // Handle file drop
   const handleDrop = (event) => {
@@ -18,6 +19,9 @@ const JSONImportExport = () => {
   // Handle file selection through click
   const handleFileInputChange = (event) => {
     const file = event.target.files[0];
+    if (!file) {
+      return;
+    }
     processFile(file);
   };
 
@@ -35,6 +39,7 @@ const JSONImportExport = () => {
         }
       };
       reader.readAsText(file);
+      setMenuOpen(false);
     } else {
       setError("Please upload a valid JSON file.");
     }
@@ -61,43 +66,44 @@ const JSONImportExport = () => {
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">JSON Import/Export</h2>
-      <div
-        className="border-dashed border-2 border-gray-400 rounded-lg p-4 text-center"
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-      >
-        <p className="text-gray-600">Drag and drop a JSON file here</p>
-        <p className="text-gray-500">or</p>
-        {/* File Input for Click Upload */}
-        <label
-          htmlFor="fileInput"
-          className="text-blue-500 cursor-pointer underline"
-        >
-          Click to upload
-        </label>
-        <input
-          id="fileInput"
-          type="file"
-          accept="application/json"
-          className="hidden"
-          onChange={handleFileInputChange}
-        />
-      </div>
-      {error && <p className="text-red-500 mt-2">{error}</p>}
-      {jsonData && (
-        <div className="mt-4">
-          <h3 className="text-lg font-bold">JSON Preview:</h3>
-          <pre className="bg-gray-100 p-2 rounded-lg overflow-auto max-h-64">
-            {JSON.stringify(jsonData, null, 2)}
-          </pre>
-          <button
-            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-            onClick={handleExport}
+    <div className="dropdown-container">
+      {/* Dropdown Toggle Button */}
+      <button className="dropdown-toggle" onClick={() => setMenuOpen(!menuOpen)}>
+        JSON Import/Export {menuOpen ? <FiChevronUp /> : <FiChevronDown />}
+      </button>
+
+      {/* Dropdown Menu */}
+      {menuOpen && (
+        <div className="dropdown-menu">
+          {/* Drag and Drop Zone */}
+          <div
+            className="drop-zone"
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
           >
-            Export JSON
-          </button>
+            <p>Drag & Drop a JSON file here</p>
+            <p>or</p>
+            <label htmlFor="fileInput" className="file-upload">
+              <FiUpload /> Click to upload
+            </label>
+            <input
+              id="fileInput"
+              type="file"
+              accept="application/json"
+              className="hidden"
+              onChange={handleFileInputChange}
+            />
+          </div>
+
+          {/* Error Message */}
+          {error && <p className="error-text">{error}</p>}
+
+          {/* Export Button */}
+          {jsonData && (
+            <button className="export-btn" onClick={handleExport}>
+              <FiDownload /> Export JSON
+            </button>
+          )}
         </div>
       )}
     </div>
