@@ -1,10 +1,11 @@
 from transformers import TrainingArguments, Trainer, DataCollatorForSeq2Seq
-from models.llama import LLaMAModel
+from models.model_factory import get_model
 
 class LoRATrainer:
     """Handles LoRA fine-tuning for Hugging Face models."""
 
-    def __init__(self, model_id, dataset, tokenizer, output_dir="./fine-tuned-model"):
+    def __init__(self, model_name, model_id, dataset, tokenizer, output_dir="./fine-tuned-model"):
+        self.model_name = model_name  # "llama" or "qwen"
         self.model_id = model_id
         self.dataset = dataset
         self.tokenizer = tokenizer
@@ -12,7 +13,7 @@ class LoRATrainer:
 
     def train(self, num_train_epochs=1, per_device_batch_size=4):
         """Fine-tunes the model using LoRA."""
-        model = LLaMAModel(self.model_id)  # Initialize LLaMA model
+        model = get_model(self.model_name, self.model_id)  # Select model dynamically
         model.load_model()
         model.apply_lora()
 
