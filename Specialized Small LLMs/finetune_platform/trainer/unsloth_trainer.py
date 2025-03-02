@@ -1,32 +1,39 @@
-from transformers import TrainingArguments, Trainer, DataCollatorForSeq2Seq
+import torch
+from unsloth import FastLora
+from transformers import TrainingArguments, Trainer
 from models.model_factory import get_model
 
-class LoRATrainer:
-    """Handles LoRA fine-tuning for Hugging Face models."""
+class UnslothTrainer:
+    """Handles Unsloth-based LoRA fine-tuning for Hugging Face models."""
 
-    def __init__(self, model_name, model_id, dataset, tokenizer, output_dir="./fine-tuned-model"):
-        self.model_name = model_name  # "llama" or "qwen"
+    def __init__(self, model_name, model_id, dataset, tokenizer, output_dir):
+        self.model_name = model_name
         self.model_id = model_id
         self.dataset = dataset
         self.tokenizer = tokenizer
         self.output_dir = output_dir
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
     def train(self, num_train_epochs=1, per_device_batch_size=4):
-        """Fine-tunes the model using LoRA."""
-        model = get_model(self.model_name, self.model_id)  # Select model dynamically
+        """Fine-tunes the model using Unsloth's LoRA trainer."""
+
+        # Load model using Unsloth
+        print("Loading model with Unsloth...")
+        model = get_model(self.model_name, self.model_id)
         model.load_model()
-        model.apply_lora()
+
+        # Apply LoRA with Unsloth
+        print("Applying LoRA with Unsloth...")
+        model.model = FastLora.apply_lora(
+            model.model,
+            r=8, lora_alpha=16, lora_dropout=0.05,
+            bias="none",
+            task_type="CAUSAL_LM"
+        )
 
         # Tokenized dataset
         train_dataset = self.dataset["train"]
         val_dataset = self.dataset["test"]
-
-        # Data Collator
-        data_collator = DataCollatorForSeq2Seq(
-            tokenizer=self.tokenizer, 
-            model=model.model, 
-            padding="longest"
-        )
 
         # Training Arguments
         training_args = TrainingArguments(
@@ -51,18 +58,15 @@ class LoRATrainer:
             args=training_args,
             train_dataset=train_dataset,
             eval_dataset=val_dataset,  
-            tokenizer=self.tokenizer,
-            data_collator=data_collator
+            tokenizer=self.tokenizer
         )
 
         # Start Training
-        print("Starting LoRA fine-tuning...")
+        print("Starting LoRA fine-tuning with Unsloth...")
         trainer.train()
 
         # Save Model
         model.save_model(self.output_dir)
         self.tokenizer.save_pretrained(self.output_dir)
 
-        # Print Training Logs
-        print("\nTraining Log History:")
-        print(trainer.state.log_history)
+        print(f"\nUnsloth fine-tuned model saved at: {self.output_dir}")
