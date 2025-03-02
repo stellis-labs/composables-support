@@ -2,24 +2,24 @@ import sys
 from dataset.huggingface_dataset import HuggingFaceDataset
 from dataset.tokenizer_wrapper import TokenizerWrapper
 from trainer.trainer import LoRATrainer
-from trainer.unsloth_trainer import UnslothTrainer
+# from trainer.unsloth_trainer import UnslothTrainer
 
 # Select Model at Runtime
-model_name = input("Choose model for fine-tuning ('llama' or 'deepseek'): ").strip().lower()
+model_name = input("Choose model for fine-tuning ('llama' or 'qwen'): ").strip().lower()
 use_unsloth = input("Use Unsloth for fine-tuning? (yes/no): ").strip().lower() == "yes"
 
 # Define Model IDs & Save Paths
 model_ids = {
     "llama": "meta-llama/Llama-3.2-1B",
-    "deepseek": "deepseek-ai/deepseek-1b"
+    "qwen": "Qwen/Qwen1.5-1.8B"
 }
 save_paths = {
     "llama": "./fine-tuned-llama",
-    "deepseek": "./fine-tuned-deepseek"
+    "qwen": "./fine-tuned-qwen"
 }
 
 if model_name not in model_ids:
-    print("Invalid model choice! Choose 'llama' or 'deepseek'.")
+    print("Invalid model choice! Choose 'llama' or 'qwen'.")
     sys.exit(1)
 
 # Load Dataset
@@ -40,7 +40,7 @@ small_val = dataset.dataset["test"].select(range(200))  # First 200 samples
 
 # Choose Trainer (Hugging Face or Unsloth)
 if use_unsloth:
-    print("🔹 Using Unsloth for fine-tuning...")
+    print("Using Unsloth for fine-tuning...")
     trainer = UnslothTrainer(
         model_name=model_name,
         model_id=model_ids[model_name],
@@ -49,7 +49,7 @@ if use_unsloth:
         output_dir=save_paths[model_name]
     )
 else:
-    print("🔹 Using Hugging Face Trainer for fine-tuning...")
+    print("Using Hugging Face Trainer for fine-tuning...")
     trainer = LoRATrainer(
         model_name=model_name,
         model_id=model_ids[model_name],
