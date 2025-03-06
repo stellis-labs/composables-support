@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-poppins), sans-serif;
+}
+
+.react-flow__node-default {
+  padding: 0px !important;
+  border-radius: 5px !important;
+  width: 250px !important;
+  color: #3D3D3D !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+  border-width: 0px !important;
+  box-shadow: 0px 0px 10px 0px rgba(195, 195, 195, 1);
+}
+
+.react-flow__node-default.selectable:focus {
+  box-shadow: 0px 0px 10px 0px rgba(195, 195, 195, 1) !important;
+}
+
+.react-flow__node-default.selectable:focus .style-module__dhw5Da__node_head {
+  color: rgb(46, 84, 15);
+  background-color: rgba(174, 226, 132, 0.5);
+  border-color: rgb(143, 215, 84);
+}
+
+.react-flow__handle-top {
+  top: -20px !important;
+}
