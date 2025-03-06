@@ -1,7 +1,7 @@
-import torch
-from unsloth import FastLora
-from transformers import TrainingArguments, Trainer
+import unsloth  # 🦥 Import Unsloth first (before transformers & peft)
+from transformers import TrainingArguments
 from models.model_factory import get_model
+import torch
 
 class UnslothTrainer:
     """Handles Unsloth-based LoRA fine-tuning for Hugging Face models."""
@@ -15,7 +15,7 @@ class UnslothTrainer:
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
     def train(self, num_train_epochs=1, per_device_batch_size=4):
-        """Fine-tunes the model using Unsloth's LoRA trainer."""
+        """Fine-tunes the model using Unsloth's optimized training."""
 
         # Load model using Unsloth
         print("Loading model with Unsloth...")
@@ -24,18 +24,7 @@ class UnslothTrainer:
 
         # Apply LoRA with Unsloth
         print("Applying LoRA with Unsloth...")
-        model.model = FastLora.apply_lora(
-            model.model,
-            r=8, lora_alpha=16, lora_dropout=0.05,
-            bias="none",
-            task_type="CAUSAL_LM"
-        )
 
-        # Tokenized dataset
-        train_dataset = self.dataset["train"]
-        val_dataset = self.dataset["test"]
-
-        # Training Arguments
         training_args = TrainingArguments(
             output_dir=self.output_dir,
             per_device_train_batch_size=per_device_batch_size,
@@ -52,18 +41,11 @@ class UnslothTrainer:
             push_to_hub=False
         )
 
-        # Trainer Setup
-        trainer = Trainer(
-            model=model.model,
-            args=training_args,
-            train_dataset=train_dataset,
-            eval_dataset=val_dataset,  
-            tokenizer=self.tokenizer
+        model.model = unsloth.unsloth_train(
+            model.model,
+            training_args=training_args,
+            dataset=self.dataset  
         )
-
-        # Start Training
-        print("Starting LoRA fine-tuning with Unsloth...")
-        trainer.train()
 
         # Save Model
         model.save_model(self.output_dir)

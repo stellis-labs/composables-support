@@ -2,7 +2,7 @@ import sys
 from dataset.huggingface_dataset import HuggingFaceDataset
 from dataset.tokenizer_wrapper import TokenizerWrapper
 from trainer.trainer import LoRATrainer
-# from trainer.unsloth_trainer import UnslothTrainer
+from trainer.unsloth_trainer import UnslothTrainer
 
 # Select Model at Runtime
 model_name = input("Choose model for fine-tuning ('llama' or 'qwen'): ").strip().lower()
