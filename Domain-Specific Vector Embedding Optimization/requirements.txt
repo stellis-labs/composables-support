@@ -1,0 +1,11 @@
+chromadb
+groq
+sentence-transformers
+llama-index
+python-dotenv
+requests
+bs4
+transformers
+llama-index-embeddings-huggingface
+llama-index-llms-groq
+llama-index-vector-stores-chroma

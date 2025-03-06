@@ -1,0 +1,81 @@
+.background {
+  background-image: linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);
+}
+
+.shadow {
+  -webkit-box-shadow: 0px 0px 20px 0px rgb(195, 195, 195, 1);
+  -moz-box-shadow: 0px 0px 20px 0px rgba(195, 195, 195, 1);
+  box-shadow: 0px 0px 20px 0px rgba(195, 195, 195, 1);
+}
+
+.upload_border {
+  border-width: 2px;
+  border-radius: 5px;
+  border-style: dashed;
+}
+
+.node {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 0px;
+}
+
+.node_id {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 400px;
+  color: #3D3D3D;
+  padding: 5px 15px;
+  background-color: #FFFFFF;
+  border-radius: 3px;
+}
+
+.node_head {
+  padding: 20px 0px 15px 0px;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(110, 42, 79, 1);
+  background-color: rgba(237, 154, 200, 0.5);
+  border-width: 1px;
+  border-color: rgba(237, 154, 200, 1);
+  border-radius: 5px 5px 0px 0px;
+}
+
+.node:focus .node_head {
+  color: rgb(70, 117, 32);
+  background-color: rgba(174, 226, 132, 0.5);
+  border-color: rgb(143, 215, 84);
+}
+
+.node_body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 15px 20px;
+  font-size: 12px;
+  background-color: #FFFFFF;
+  border-width: 0px 1px 1px 1px;
+  border-color: rgba(193, 192, 192);
+  border-radius: 0px 0px 5px 5px;
+}
+
+.input {
+  padding: 10px 20px;
+  color: #606060;
+  background-color: #F0F0F0;
+  font-size: 12px;
+  border-radius: 5px;
+}
+
+.input:focus {
+  padding: 10px 20px;
+  color: #3D3D3D;
+  background-color: #F0F0F0;
+  outline: none;
+  border-width: 1px;
+  border-color: rgb(143, 215, 84);
+}
