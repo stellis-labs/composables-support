@@ -1,15 +1,17 @@
 from abc import ABC, abstractmethod
 import torch
-from transformers import AutoModelForCausalLM
-from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
+from transformers import AutoModelForCausalLM, AutoTokenizer
+import unsloth
 
 class BaseModel(ABC):
     """Abstract base class for LoRA fine-tuning models."""
 
-    def __init__(self, model_id):
+    def __init__(self, model_id, use_unsloth=False):
         self.model_id = model_id
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.use_unsloth = use_unsloth
         self.model = None
+        self.tokenizer = None
 
     @abstractmethod
     def load_model(self):
@@ -24,3 +26,4 @@ class BaseModel(ABC):
     def save_model(self, path):
         """Saves the fine-tuned model."""
         self.model.save_pretrained(path)
+        self.tokenizer.save_pretrained(path)
