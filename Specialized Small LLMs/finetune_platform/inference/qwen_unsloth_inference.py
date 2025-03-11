@@ -1,10 +1,13 @@
-import unsloth
+import unsloth  # 🦥 Unsloth should be imported first
 from transformers import AutoTokenizer
 import torch
 from .base_inference import BaseInference
 
 class QwenUnslothInference(BaseInference):
     """Handles inference for fine-tuned Qwen models using Unsloth."""
+
+    def __init__(self, model_path, base_model_id):
+        super().__init__(model_path, base_model_id, model_type="qwen")
 
     def load_model(self):
         """Loads the fine-tuned Qwen (Unsloth) model and tokenizer."""
@@ -29,14 +32,9 @@ class QwenUnslothInference(BaseInference):
         inputs = self.tokenizer(prompt, return_tensors="pt", padding=True, truncation=True, max_length=512)
         input_ids = inputs.input_ids.to(self.device)
 
+        kwargs = self.generate_kwargs(max_length, temperature, top_p, do_sample)
+
         with torch.no_grad():
-            output = self.model.generate(
-                input_ids,
-                max_length=max_length,
-                do_sample=do_sample,
-                temperature=temperature,
-                top_p=top_p,
-                pad_token_id=self.tokenizer.pad_token_id
-            )
+            output = self.model.generate(input_ids, **kwargs)
 
         return self.tokenizer.decode(output[0], skip_special_tokens=True)

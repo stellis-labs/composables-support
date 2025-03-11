@@ -6,6 +6,9 @@ from .base_inference import BaseInference
 class QwenInference(BaseInference):
     """Handles inference for fine-tuned Qwen models (Hugging Face)."""
 
+    def __init__(self, model_path, base_model_id):
+        super().__init__(model_path, base_model_id, model_type="qwen")
+
     def load_model(self):
         """Loads the fine-tuned Qwen model and tokenizer."""
         print(f"Loading fine-tuned Qwen model from: {self.model_path}")
@@ -40,15 +43,9 @@ class QwenInference(BaseInference):
         input_ids = inputs.input_ids.to(self.device)
         attention_mask = inputs.attention_mask.to(self.device)
 
+        kwargs = self.generate_kwargs(max_length, temperature, top_p, do_sample)
+
         with torch.no_grad():
-            output = self.model.generate(
-                input_ids,
-                attention_mask=attention_mask,
-                max_length=max_length,
-                do_sample=do_sample,
-                temperature=temperature,
-                top_p=top_p,
-                pad_token_id=self.tokenizer.pad_token_id
-            )
+            output = self.model.generate(input_ids, attention_mask=attention_mask, **kwargs)
 
         return self.tokenizer.decode(output[0], skip_special_tokens=True)
