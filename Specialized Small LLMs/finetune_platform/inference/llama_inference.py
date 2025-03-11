@@ -4,7 +4,7 @@ import torch
 from .base_inference import BaseInference
 
 class LLaMAInference(BaseInference):
-    """Handles inference for fine-tuned LLaMA models."""
+    """Handles inference for fine-tuned LLaMA models (Hugging Face)."""
 
     def load_model(self):
         """Loads the fine-tuned model and tokenizer."""
@@ -13,7 +13,7 @@ class LLaMAInference(BaseInference):
         # Load tokenizer
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_path)
         
-        # Ensure tokenizer has pad token
+        # Ensure tokenizer has a pad token
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token  
 
@@ -30,7 +30,7 @@ class LLaMAInference(BaseInference):
 
         print("Model loaded successfully.")
 
-    def generate_response(self, user_query, max_length=256):
+    def generate_response(self, user_query, max_length=256, temperature=0.7, top_p=0.9, do_sample=True):
         """Generates a response using the fine-tuned LLaMA chatbot."""
 
         prompt = f"<|user|>\n{user_query}\n\n<|assistant|>\n"
@@ -45,9 +45,9 @@ class LLaMAInference(BaseInference):
                 input_ids,
                 attention_mask=attention_mask,
                 max_length=max_length,
-                do_sample=True,
-                temperature=0.4,
-                top_p=0.9,
+                do_sample=do_sample,
+                temperature=temperature,
+                top_p=top_p,
                 pad_token_id=self.tokenizer.pad_token_id
             )
 

@@ -11,7 +11,7 @@ class LLaMAModel(BaseModel):
         print(f"Loading LLaMA model: {self.model_id}")
 
         if self.use_unsloth:
-            print("🔹 Using Unsloth for model loading...")
+            print("Using Unsloth for model loading...")
             self.model, self.tokenizer = unsloth.FastLanguageModel.from_pretrained(
                 model_name=self.model_id,
                 max_seq_length=2048,

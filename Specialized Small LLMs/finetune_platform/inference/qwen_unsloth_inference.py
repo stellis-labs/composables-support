@@ -3,12 +3,12 @@ from transformers import AutoTokenizer
 import torch
 from .base_inference import BaseInference
 
-class LLaMAUnslothInference(BaseInference):
-    """Handles inference for fine-tuned LLaMA models using Unsloth."""
+class QwenUnslothInference(BaseInference):
+    """Handles inference for fine-tuned Qwen models using Unsloth."""
 
     def load_model(self):
-        """Loads the fine-tuned LLaMA (Unsloth) model and tokenizer."""
-        print(f"Loading fine-tuned LLaMA (Unsloth) model from: {self.model_path}")
+        """Loads the fine-tuned Qwen (Unsloth) model and tokenizer."""
+        print(f"Loading fine-tuned Qwen (Unsloth) model from: {self.model_path}")
 
         # Load model using Unsloth's FastLanguageModel
         self.model, self.tokenizer = unsloth.FastLanguageModel.from_pretrained(
@@ -18,10 +18,10 @@ class LLaMAUnslothInference(BaseInference):
             load_in_4bit=True,
         )
 
-        print("Unsloth LLaMA model loaded successfully.")
+        print("Unsloth Qwen model loaded successfully.")
 
     def generate_response(self, user_query, max_length=256, temperature=0.7, top_p=0.9, do_sample=True):
-        """Generates a response using the fine-tuned Unsloth LLaMA chatbot."""
+        """Generates a response using the fine-tuned Unsloth Qwen chatbot."""
 
         prompt = f"<|user|>\n{user_query}\n\n<|assistant|>\n"
 
