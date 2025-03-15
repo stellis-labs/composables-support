@@ -18,7 +18,7 @@ class HuggingFaceDataset(BaseDataset):
             formatted_texts = preprocess_text(examples)  # Formatting to `<|user|>...<|assistant|>`
             tokenized = tokenizer(
                 formatted_texts,
-                padding="longest",
+                padding="max_length",
                 truncation=True,
                 max_length=512,
                 return_tensors="pt"

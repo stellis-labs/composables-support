@@ -1,0 +1,4 @@
+{
+    "train_subset_size": 1000,
+    "val_subset_size": 200
+}
