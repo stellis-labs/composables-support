@@ -1,0 +1,5 @@
+torch
+datasets
+trl
+vllm
+unsloth
